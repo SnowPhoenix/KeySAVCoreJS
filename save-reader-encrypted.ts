@@ -10,7 +10,7 @@ export { default as SaveReader } from "./save-reader";
 export default class SaveReaderEncrypted implements SaveReader {
     public static getOffsets(generation: number) {
         return {
-            6: {
+           6: {
                 fileSize: 0x100000,
                 saveSize: 0x07f000,
                 base1: 0x1000,
@@ -21,19 +21,14 @@ export default class SaveReaderEncrypted implements SaveReader {
                 saveSize: 0x07e000,
                 base1: 0x2000,
                 base2: 0x080000
+            },
+            [7 | (1 << 24)]: {
+                fileSize: 0x100000,
+                saveSize: 0x07f000,
+                base1: 0x1000,
+                base2: 0x081000
             }
         }[generation];
-    }
-
-    public static getGeneration(file: Uint8Array) {
-        let length = file.length;
-        if (length === 0x100000 || length === 0x10009C || length === 0x10019A) {
-            return 6;
-        }
-        if (length === 0x0fe000 || length === 0x0fe09c || length === 0x0fe19a) {
-            return 7;
-        }
-        return -1;
     }
 
     private activeSlot: number;

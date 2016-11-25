@@ -43,6 +43,8 @@ var savFull1 = bufferToUint8Array(fs.readFileSync(__dirname + "/data/full-1.bin"
 var savFull2 = bufferToUint8Array(fs.readFileSync(__dirname + "/data/full-2.bin"));
 var sav16SM = bufferToUint8Array(fs.readFileSync(__dirname + "/data/16-sm.sav"));
 var sav165SM = bufferToUint8Array(fs.readFileSync(__dirname + "/data/165-sm.sav"));
+var sav16SMP = bufferToUint8Array(fs.readFileSync(__dirname + "/data/16-physical-sumo.bin"));
+var sav165SMP = bufferToUint8Array(fs.readFileSync(__dirname + "/data/165-physical-sumo.bin"));
 var keyNew = new SaveKey((fs.readFileSync(__dirname + "/data/oras-key-new.bin")));
 var keyOld = new SaveKey((fs.readFileSync(__dirname + "/data/oras-key-old.bin")));
 
@@ -139,10 +141,21 @@ describe("SaveBreaker", function() {
             });
         });
 
-        it("should create a new style key from two appropriate saves (Gen 7)", function() {
+        it("should create a new style key from two appropriate digital saves (Gen 7)", function() {
             var store = new KeyStoreMemory();
             setKeyStore(store);
             return SaveBreaker.breakKey(sav16SM, sav165SM).then(function(res) {
+                assert.equal("CREATED_NEW", res);
+                return SaveBreaker.load(sav16SM);
+            }).then(function(reader) {
+                console.log(reader.getPkx(0));
+            });
+        });
+
+        it("should create a new style key from two appropriate physical saves (Gen 7)", function() {
+            var store = new KeyStoreMemory();
+            setKeyStore(store);
+            return SaveBreaker.breakKey(sav16SMP, sav165SMP).then(function(res) {
                 assert.equal("CREATED_NEW", res);
                 return SaveBreaker.load(sav16SM);
             }).then(function(reader) {
