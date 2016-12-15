@@ -47,7 +47,9 @@ export default class PkBase {
     public nature: number;
     public species: number;
     public heldItem: number;
+    public tidFull: number;
     public tid: number;
+    public tid7: number;
     public sid: number;
     public tsv: number;
     public esv: number;
@@ -140,8 +142,10 @@ export default class PkBase {
         this.chk = data.getUint16(0x6, true);
         this.species = data.getUint16(0x8, true);
         this.heldItem = data.getUint16(0xa, true);
-        this.tid = data.getUint16(0xc, true);
-        this.sid = data.getUint16(0xe, true);
+        this.tidFull = data.getUint32(0xc, true);
+        this.tid = this.tidFull & 0xffff;
+        this.tid7 = this.tidFull % 1000000;
+        this.sid = this.tidFull >>> 16;
         this.exp = data.getUint32(0x10, true);
         this.ability = pkx[0x14];
         this.abilityNum = pkx[0x15];
